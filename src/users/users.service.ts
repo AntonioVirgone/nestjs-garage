@@ -4,13 +4,13 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async findAll() {
     return this.prisma.user.findMany();
   }
 
-  async create(data) {
+  async create(data: {email: string, name: string, password?: string}) {
     try {
       return await this.prisma.user.create({
         data,
@@ -23,5 +23,9 @@ export class UsersService {
       }
       throw error; // Rethrow other errors
     }
-  }     
+  }
+
+  async findOneByEmail(email: string) {
+    return (await this.prisma.user.findMany()).filter((user) => user.email == email);
+  }
 }
