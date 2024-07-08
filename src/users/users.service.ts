@@ -1,7 +1,6 @@
-import { Injectable, ConflictException, Logger } from '@nestjs/common';
+import { Injectable, ConflictException, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import { equal } from 'assert';
 
 @Injectable()
 export class UsersService {
@@ -14,9 +13,13 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string) {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { email },
-    })
+    });
+
+    if (!user) throw new NotFoundException(`User with email ${email} not found`);
+
+    return user;
   }
 
   async findByAge(age: number | null) {
