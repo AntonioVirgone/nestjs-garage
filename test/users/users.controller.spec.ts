@@ -1,7 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { UsersController } from "./users.controller";
-import { UsersService } from "./users.service";
-import { PrismaService } from "../prisma/prisma.service";
+import { UsersController } from "../../src/users/users.controller";
+import { UsersService } from "../../src/users/users.service";
 
 describe('UserController', () => {
     let userController: UsersController;
@@ -15,6 +14,7 @@ describe('UserController', () => {
                     provide: UsersService,
                     useValue: {
                         findAll: jest.fn(),
+                        findOneByEmail: jest.fn(),
                     }
                 }
             ],
@@ -35,6 +35,16 @@ describe('UserController', () => {
             const result = await userController.getAllUsers();
 
             expect(result).toEqual(mockUsers);
-        })
-    })
+        });
+
+        it('should return user by email', async () => {
+            const mockUser = { id: 1, name: 'Test User', email: 'test@test.com', age: 35 };
+
+            jest.spyOn(userService, 'findOneByEmail').mockResolvedValue(mockUser as any);
+
+            const result = await userController.getUserByEmail('test@test.com');
+
+            expect(result).toEqual(mockUser);
+        });
+    });
 })
