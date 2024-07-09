@@ -22,3 +22,15 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Vehicle {
+  id    Int     @id @default(autoincrement())
+  brand  String
+  model  String
+  euroClass String
+  powerSupply String
+  engineCapacity String
+  kiloWatt String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
